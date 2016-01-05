@@ -29,7 +29,7 @@ symbolic-links=0
 
 
 #*********************线程池配置*********************#
-thread_handling = one-thread-per-connection
+thread_handling = pool-of-threads
 #线程处理方法：
 #one-thread-per-connection
 #pool-of-threads
