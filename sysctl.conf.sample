@@ -1,0 +1,194 @@
+
+# 内核sysctl配置文件 
+# 作者：[Lei Tian] tianlei@paratera.com
+# 时间： 20160119PM184144
+# 说明：本文件随ParateraDB-Configuration软件包一起安装到系统中
+
+#***************与文件系统相关*************************************
+# 系统所有可打开文件总数
+fs.file-max = 6815744
+
+# 同时可以拥有的的异步IO请求数目,1024*1024
+# 参考：
+# http://johanlouwers.blogspot.com/2010/02/aio-max-nr-parameter-for-oracle.html
+# http://www.ibm.com/developerworks/linux/library/l-async/
+fs.aio-max-nr = 1048576
+#******************************************************************
+
+
+
+#**************与系统内核DEBUG相关的参数*****************************
+# 控制系统救援
+kernel.sysrq = 0
+
+#在core文件中添加PID信息方便调试多线程应用
+kernel.core_uses_pid = 1
+#*****************************************************************
+
+
+
+#**************与系统进程间通讯相关的参数*****************************
+
+# 指定一个消息队列的最大长度（bytes）
+kernel.msgmnb = 65536
+
+# 指定了从一个进程发送到另一个进程的消息的最大长度（bytes）
+kernel.msgmax = 65536
+
+# 内核所允许的最大共享内存段的大小（bytes）,物理内存*50%。实际可用最大共享内存段大小=shmmax * 98%，其中大约2%用于共享内存结构
+kernel.shmmax = 68719476736
+
+# 在任何给定时刻，系统上可以使用的共享内存的总量（pages）
+kernel.shmall = 4294967296
+
+# 用于整个系统的共享内存段的最大数目（个）
+kernel.shmmni = 4096
+
+# 第一列，表示每个信号集中的最大信号量数目。
+# 第二列，表示系统范围内的最大信号量总数目。
+# 第三列，表示每个信号发生时的最大系统操作数目。
+# 第四列，表示系统范围内的最大信号集总数目。
+# 所以，（第一列）*（第四列）=（第二列）
+kernel.sem = 250 32000 100 128
+#*******************************************************************
+
+
+
+#**************与系统内存相关*****************************************
+# 表示系统进行交换行为的程度，数值（0-100）越高，越可能发生磁盘交换。
+vm.swappiness=0
+#*******************************************************************
+
+
+
+#***************与网络相关********************************************
+# 控制IP包转发功能，0为关闭
+net.ipv4.ip_forward = 0
+#********************************************************************
+
+
+#***************************关闭路由相关功能**********************************
+# 控制源路由认证
+net.ipv4.conf.default.rp_filter = 1
+# 是否接受含有源路由信息的IP包
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv4.conf.lo.accept_source_route = 0
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.eth0.accept_source_route = 0
+
+# 如果主机所在的网段中有两个路由器，你将其中一个设置成了缺省网关，但是该网关
+# 在收到你的ip包时发现该ip包必须经过另外一个路由器，这时这个路由器就会给你
+# 发一个所谓的“重定向”icmp包，告诉将ip包转发到另外一个路由器。参数值为布尔
+# 值，1表示接收这类重定向icmp 信息，0表示忽略。在充当路由器的linux主机上缺
+# 省值为0，在一般的linux主机上缺省值为1。建议将其改为0以消除安全性隐患。
+net.ipv4.conf.lo.accept_redirects=0
+net.ipv4.conf.all.accept_redirects=0
+net.ipv4.conf.eth0.accept_redirects=0
+net.ipv4.conf.default.accept_redirects=0
+
+# 其实所谓的“安全重定向”就是只接受来自网关的“重定向”icmp包。该参数就是
+#用来设置“安全重定向”功能的。参数值为布尔值，1表示启用，0表示禁止，缺省值
+#为启用。
+net.ipv4.conf.lo.secure_redirects=0
+net.ipv4.conf.all.secure_redirects=0
+net.ipv4.conf.eth0.secure_redirects=0
+net.ipv4.conf.default.secure_redirects=0
+
+net.ipv4.conf.lo.send_redirects=0
+net.ipv4.conf.all.send_redirects=0
+net.ipv4.conf.eth0.send_redirects=0
+net.ipv4.conf.default.send_redirects=0
+
+# 某些路由器违背RFC1122标准，其对广播帧发送伪造的响应来应答。这种违背行
+# 为通常会被以告警的方式记录在系统日志中。如果该选项设置为True，内核不会
+# 记录这种警告信息
+#net.ipv4.icmp_ratelimit = 1
+#net.ipv4.icmp_ratemask = 1
+#net.ipv4.icmp_ignore_bogus_error_reponses = 1
+#**************************************************************************
+
+
+
+
+#***********************优化TCP协议栈********************************
+#防SyncFlood攻击
+net.ipv4.tcp_syncookies = 1
+
+# 打开TIME-WAIT套接字重用功能，对于存在大量连接的Web服务器非常有效。
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+
+# 减少TCP KeepAlive连接侦测的时间，使系统可以处理更多的连接
+net.ipv4.tcp_keepalive_time=7200
+#减少处于FIN-WAIT-2连接状态的时间，使系统可以处理更多的连接
+net.ipv4.tcp_fin_timeout = 20
+# 增加TCP SYN队列长度，使系统可以处理更多的并发连接
+net.ipv4.tcp_max_syn_backlog=8192
+#********************************************************************
+
+
+#************************优化系统套接字缓冲区*************************
+#tcp接收缓冲区
+net.ipv4.tcp_rmem = 4096 87380 16777216
+#tcp发送缓冲区
+net.ipv4.tcp_wmem = 4096 65536 16777216
+#*********************************************************************
+
+
+
+net.ipv4.tcp_rfc1337 = 1
+net.ipv4.tcp_sack = 0
+net.ipv4.tcp_keepalive_probes = 5
+net.ipv4.tcp_max_orphans = 32768
+net.ipv4.tcp_orphan_retries = 1
+#同时保持TIME_WAIT套接字的最大数量,默认18000
+net.ipv4.tcp_max_tw_buckets = 5000
+
+net.ipv4.neigh.default.gc_thresh3 = 2048
+net.ipv4.neigh.default.gc_thresh2 = 1024
+net.ipv4.neigh.default.gc_thresh1 = 256
+
+net.ipv4.conf.default.forwarding = 1
+net.ipv4.conf.default.proxy_arp = 0
+net.ipv4.conf.default.proxy_arp = 0
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.send_redirects = 1
+net.ipv4.conf.all.send_redirects = 0
+
+# 表示写每个警告消息相关的成本值。该值越大，越有可能忽略警告消息。缺省50（5秒）
+net.core.message_cost = 50
+
+#*****************************优化网络设备接受队列************************************
+#每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数目
+#http://blog.sina.com.cn/s/blog_6cf467320100m458.html
+net.core.netdev_max_backlog = 2048
+#**********************************************************************************
+
+# https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Performance_Tuning_Guide/s-network-common-queue-issues.html#s-network-commonque-nichwbuf
+net.core.dev_weight = 64
+
+#表示每个套接字所允许的最大缓冲区的大小
+#http://www.360doc.com/content/14/0606/16/3300331_384326124.shtml
+net.core.optmem_max = 20480
+
+#****************************优化TPC接收/发送缓冲区************************************
+# 接收套接字缓冲区大小的缺省值（以字节为单位）
+net.core.rmem_default = 16777216
+# 接收套接字缓冲区大小的最大值（以字节为单位）
+net.core.rmem_max = 16777216
+# 发送套接字缓冲区大小的缺省值（以字节为单位）
+net.core.wmem_default = 16777216
+# 发送套接字缓冲区大小的最大值（以字节为单位）
+net.core.wmem_max = 16777216
+#************************************************************************************
+
+#定义了系统中每一个端口最大的监听队列的长度,这是个全局的参数,默认值为128
+#http://blog.csdn.net/taolinke/article/details/6800979
+net.core.somaxconn = 2048
+
+# Defines the local port range that is used by TCP and UDP
+# traffic to choose the local port
+net.ipv4.ip_local_port_range = 5000    65500
+
+
+
