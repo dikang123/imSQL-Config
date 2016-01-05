@@ -5,9 +5,9 @@ set -e
 function adaptive_cpus_number (){
     PCPU=`cat /proc/cpuinfo |grep "physical id"|sort|uniq|wc -l`
     #Get current machine physical cpu number.
-    sed -i "s/thread_pool_size = 4/thread_pool_size = $PCPU/g" /etc/my.cnf
-    sed -i "s/innodb_read_io_threads = 16/innodb_read_io_threads = $PCPU/g" /etc/my.cnf
-    sed -i "s/innodb_write_io_threads = 16/innodb_write_io_threads = $PCPU/g" /etc/my.cnf
+    sed -i "s/thread_pool_size = 4/thread_pool_size = $(( $PCPU*8 ))/g" /etc/my.cnf
+    sed -i "s/innodb_read_io_threads = 16/innodb_read_io_threads = $(( $PCPU*2 ))/g" /etc/my.cnf
+    sed -i "s/innodb_write_io_threads = 16/innodb_write_io_threads = $(( $PCPU*2 ))/g" /etc/my.cnf
 }
 
 function adaptive_buffersize_size (){
