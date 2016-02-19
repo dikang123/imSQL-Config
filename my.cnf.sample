@@ -13,6 +13,8 @@ lower_case_table_names=1
 #忽略表名的大小写。
 group_concat_max_len = 2000000
 #group_concat函数输出的最长字符数
+tx_isolation = READ-COMMITTED
+#隔离级别READ-UNCOMMITTED,READ-COMMITTED, REPEATABLE-READ, or SERIALIZABLE
 sql_mode = NO_ENGINE_SUBSTITUTION
 #sql约束模式
 # 参考： 
