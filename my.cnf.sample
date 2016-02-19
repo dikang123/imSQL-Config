@@ -9,6 +9,10 @@ default_storage_engine=InnoDB
 #默认普通表存储引擎
 character_set_server=utf8
 #服务器默认的字符编码时UTF-8
+collation_server = utf8_general_ci
+collation_database = utf8_general_ci
+collation_connection = utf8_general_ci
+#服务器默认的字符对比方法是utf8_general_ci
 lower_case_table_names=1
 #忽略表名的大小写。
 group_concat_max_len = 2000000
