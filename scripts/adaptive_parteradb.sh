@@ -38,13 +38,13 @@ function enable_kernel_parameters (){
 
 function main(){
     if [ -f /etc/my.cnf.sample ];then
-        mv -f /etc/my.cnf.sample /etc/my.cnf
+        cp -f /etc/my.cnf.sample /etc/my.cnf
     fi
     if [ -f /etc/sysctl.conf.sample ];then
-        mv -f /etc/sysctl.conf.sample /etc/sysctl.conf 
+        cp -f /etc/sysctl.conf.sample /etc/sysctl.conf 
     fi 
     if [ -f /etc/security/limits.conf.sample ];then
-        mv -f /etc/security/limits.conf.sample /etc/security/limits.conf 
+        cp -f /etc/security/limits.conf.sample /etc/security/limits.conf 
     fi
 
     adaptive_cpus_number
