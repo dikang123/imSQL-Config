@@ -90,6 +90,10 @@ port=3306
 #绑定的端口
 socket=/var/lib/mysql/mysql.sock
 #Socket文件的存储位置
+max_allowed_packet = 4194304
+#服务器端允许接受和发送的最大包大小
+net_buffer_length = 16384
+#服务器网络缓冲大小。net_buffer_length的值一定要小鱼max_allowed_packet的值。否则会报警。
 
 
 #*********************缓冲池配置*********************#
