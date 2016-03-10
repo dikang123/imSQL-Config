@@ -157,7 +157,7 @@ sync_binlog=1
 #同步归档日志到磁盘
 binlog_format=ROW
 #归档日志存储格式，统一使用ROW
-expire-logs-days=100
+expire-logs-days=99
 #归档日志的过期日期，过期的归档日志将被自动移除
 log-slave-updates=True
 #从机必须记录日志。
