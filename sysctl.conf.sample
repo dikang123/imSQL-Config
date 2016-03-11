@@ -74,7 +74,7 @@ net.ipv4.conf.default.rp_filter = 1
 net.ipv4.conf.default.accept_source_route = 0
 net.ipv4.conf.lo.accept_source_route = 0
 net.ipv4.conf.all.accept_source_route = 0
-net.ipv4.conf.eth0.accept_source_route = 0
+#net.ipv4.conf.eth0.accept_source_route = 0
 
 # 如果主机所在的网段中有两个路由器，你将其中一个设置成了缺省网关，但是该网关
 # 在收到你的ip包时发现该ip包必须经过另外一个路由器，这时这个路由器就会给你
@@ -83,7 +83,7 @@ net.ipv4.conf.eth0.accept_source_route = 0
 # 省值为0，在一般的linux主机上缺省值为1。建议将其改为0以消除安全性隐患。
 net.ipv4.conf.lo.accept_redirects=0
 net.ipv4.conf.all.accept_redirects=0
-net.ipv4.conf.eth0.accept_redirects=0
+#net.ipv4.conf.eth0.accept_redirects=0
 net.ipv4.conf.default.accept_redirects=0
 
 # 其实所谓的“安全重定向”就是只接受来自网关的“重定向”icmp包。该参数就是
@@ -91,12 +91,12 @@ net.ipv4.conf.default.accept_redirects=0
 #为启用。
 net.ipv4.conf.lo.secure_redirects=0
 net.ipv4.conf.all.secure_redirects=0
-net.ipv4.conf.eth0.secure_redirects=0
+#net.ipv4.conf.eth0.secure_redirects=0
 net.ipv4.conf.default.secure_redirects=0
 
 net.ipv4.conf.lo.send_redirects=0
 net.ipv4.conf.all.send_redirects=0
-net.ipv4.conf.eth0.send_redirects=0
+#net.ipv4.conf.eth0.send_redirects=0
 net.ipv4.conf.default.send_redirects=0
 
 # 某些路由器违背RFC1122标准，其对广播帧发送伪造的响应来应答。这种违背行
