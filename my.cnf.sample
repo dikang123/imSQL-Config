@@ -30,7 +30,7 @@ sql_mode = TRADITIONAL
 #        TRADITIONAL         等同于STRICT_ALL_TABLES,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION的组合
 symbolic-links=0
 # Disabling symbolic-links is recommended to prevent assorted security risks
-log_output = TABLE
+log_output = FILE,TABLE
 #设定general_log和slowquery都保存在什么位置。默认是FILE,表示都保存到文件。如果是TABLE表示保存到mysql.general_log和mysql.slow_query_log表中。
 
 
@@ -172,6 +172,18 @@ slow_query_log=0
 #慢查询日志开启开关
 slow_query_log_file=/var/lib/mysql/Slow-Query.log
 #慢查询保存的位置及名称
+long_query_time = 2
+#执行时间大于多少秒就记录到慢查询日志中
+log-slow-verbosity=query_plan,profiling,innodb
+#慢查询日志附加选项
+#microtime: Log queries with microsecond precision.
+#query_plan: Log information about the query’s execution plan.
+#innodb: Log InnoDB statistics.
+#minimal: Equivalent to enabling just microtime.
+#standard: Equivalent to enabling microtime,innodb.
+#full: Equivalent to all other values OR’ed together without the profiling and profiling_use_getrusage options.
+#profiling: Enables profiling of all queries in all connections.
+#profiling_use_getrusage: Enables usage of the getrusage function.
 
 
 #*********************操作日志配置*********************#
