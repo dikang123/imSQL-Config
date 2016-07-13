@@ -17,7 +17,7 @@ group_concat_max_len = 2000000
 #group_concat函数输出的最长字符数
 transaction-isolation = REPEATABLE-READ
 #隔离级别READ-UNCOMMITTED,READ-COMMITTED, REPEATABLE-READ, or SERIALIZABLE
-sql_mode = TRADITIONAL
+sql_mode = NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 #sql约束模式
 # 参考： 
 #        STRICT_ALL_TABLES   对所有存储引擎使用严格模式
@@ -32,25 +32,26 @@ symbolic-links=0
 # Disabling symbolic-links is recommended to prevent assorted security risks
 log_output = FILE,TABLE
 #设定general_log和slowquery都保存在什么位置。默认是FILE,表示都保存到文件。如果是TABLE表示保存到mysql.general_log和mysql.slow_query_log表中。
+default-time-zone='+08:00'
 
 
 #*********************线程池配置*********************#
-thread_handling = pool-of-threads
+thread_handling = one-thread-per-connection
 #线程处理方法：
 #one-thread-per-connection
 #pool-of-threads
 # 参考：
 # https://www.percona.com/doc/percona-server/5.5/performance/threadpool.html
 # https://mariadb.com/kb/en/mariadb/thread-pool-in-mariadb/#optimizing-server-variables-on-unix
-thread_pool_size = 4 
+#thread_pool_size = 4 
 #线程组的个数，默认与处理器个数一致
-thread_pool_idle_timeout = 60
+#thread_pool_idle_timeout = 60
 #闲置线程在多少秒后退出
-thread_pool_max_threads = 100000
+#thread_pool_max_threads = 100000
 #线程池内最大的线程数
-thread_pool_oversubscribe =3 
+#thread_pool_oversubscribe =3 
 #线程池超额数,默认为3
-thread_pool_stall_limit = 500
+#thread_pool_stall_limit = 500
 #一个正在运行的线程被认为停止运转500毫秒前，线程池会唤醒或创建新的线程。
 
 
@@ -66,15 +67,15 @@ innodb_thread_sleep_delay=1000
 
 
 #*********************InnoDB IO配置*********************#
-innodb_flush_method = O_DIRECT
+innodb_flush_method = O_DSYNC
 #InnoDB刷新模式
 # O_DIRECT 
 # O_DSYNC
 # 参考：
 # http://dba.stackexchange.com/questions/23943/innodb-flush-method-o-direct-vs-o-dsync-performance-impact-on-ext3-with-lvm-disk
-innodb_read_io_threads = 16 
+innodb_read_io_threads = 4
 #InnoDB读预取请求IO的线程数,与CPU个数一致
-innodb_write_io_threads = 16
+innodb_write_io_threads = 4
 #InnoDB从缓冲池写脏页的IO线程数,CPU个数的两倍
 innodb_io_capacity = 200
 #InnoDB每秒可以操作的磁盘IO数
@@ -120,13 +121,13 @@ max_tmp_tables = 32
 #临时表最多创建个数
 tmp_table_size = 8G
 #临时表最大占用的磁盘空间
-tmpdir = /tmp
+tmpdir = /Database/TmpData
 #临时表的存储目录
 
 
 #*********************数据文件配置*********************#
-datadir=/var/lib/mysql
-innodb_data_home_dir =/var/lib/mysql
+datadir = /Database/Data 
+innodb_data_home_dir = /Database/Data
 #数据文件目录
 innodb_data_file_path=ibdata1:1G:autoextend
 #共享表空间名字，和自动扩展大小
@@ -138,9 +139,9 @@ innodb_file_format_max=Barracuda
 
 
 #*********************在线日志配置*********************#
-innodb_log_group_home_dir =/var/lib/mysql
+innodb_log_group_home_dir = /Database/OnLineLogs
 #在线日志的存储路径
-innodb_log_files_in_group=16
+innodb_log_files_in_group=8
 #同事有多少个日志组
 innodb_log_file_size=1G
 #每个在线日志的大小
@@ -149,7 +150,7 @@ innodb_flush_log_at_trx_commit=1
 
 
 #*********************归档日志配置*********************#
-log_bin=/var/lib/mysql/archlog
+log_bin = /Database/ArchLogs
 #归档日志的保存路径及名称
 max_binlog_size=1G
 #最大归档日志大小
@@ -157,20 +158,20 @@ sync_binlog=1
 #同步归档日志到磁盘
 binlog_format=ROW
 #归档日志存储格式，统一使用ROW
-expire-logs-days=99
+expire-logs-days = 30
 #归档日志的过期日期，过期的归档日志将被自动移除
-log-slave-updates=True
+log-slave-updates = True
 #从机必须记录日志。
-#gtid-mode=ON
+gtid-mode=ON
 #开启GTID日志
-#enforce-gtid-consistency=True
+enforce-gtid-consistency=True
 #强制使用事务语句
 
 
 #*********************慢查询日志配置*********************#
 slow_query_log=0
 #慢查询日志开启开关
-slow_query_log_file=/var/lib/mysql/Slow-Query.log
+slow_query_log_file = /Database/SlowLogs/Slow-Query.log
 #慢查询保存的位置及名称
 long_query_time = 2
 #执行时间大于多少秒就记录到慢查询日志中
@@ -184,13 +185,29 @@ log-slow-verbosity=query_plan,profiling,innodb
 #full: Equivalent to all other values OR’ed together without the profiling and profiling_use_getrusage options.
 #profiling: Enables profiling of all queries in all connections.
 #profiling_use_getrusage: Enables usage of the getrusage function.
+max_slowlog_files = 10
+max_slowlog_size = 10M
 
 
 #*********************操作日志配置*********************#
 general_log=OFF
 #操作日志开启开关
-general_log_file=/tmp/general.log
+general_log_file = /Database/TmpData/general.log
 #操作日志保存的位置及名称
+
+#*********************死锁日志配置**********************#
+deadlock_log_path = /Database/TmpData
+innodb_print_all_deadlocks = OFF
+
+
+#*********************审计日志配置**********************#
+#audit_log_path = /Database/AuditLogs
+#audit_log_rotate_on_size = 10M 
+#audit_log_rotations = 10 
+#audit_log_format = MONGO
+#audit_log_logging = ON
+#audit_log_file = "audit.log"
+
 
 #*********************RELAY日志配置*********************#
 #relay_log=/var/lib/mysql/Relay-logs
@@ -274,7 +291,7 @@ auto-rehash
 #no-auto-rehash
 #命令行自动补全功能
 pager="less -i -n -S"
-tee="/tmp/query.log"
+tee="/Database/TmpData/query.log"
 #命令行输出的导出位置及名称
 prompt=(\\u@\\h) [\\d]>\\_
 #命令行提示符

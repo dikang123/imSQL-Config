@@ -1,5 +1,5 @@
 Name:       ParateraDB-Configuration
-Version:    1.0.13
+Version:    1.0.15
 Release:	1%{?dist}
 Summary:	ParateraDB Configuration Files.
 
