@@ -150,7 +150,7 @@ innodb_flush_log_at_trx_commit=1
 
 
 #*********************归档日志配置*********************#
-log_bin = /Database/ArchLogs
+log_bin = /Database/ArchLogs/archlog
 #归档日志的保存路径及名称
 max_binlog_size=1G
 #最大归档日志大小
