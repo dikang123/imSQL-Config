@@ -171,7 +171,7 @@ enforce-gtid-consistency=True
 #*********************慢查询日志配置*********************#
 slow_query_log=0
 #慢查询日志开启开关
-slow_query_log_file = /Database/SlowLogs/Slow-Query.log
+slow_query_log_file = /Database/SlowLogs/slowquery
 #慢查询保存的位置及名称
 long_query_time = 2
 #执行时间大于多少秒就记录到慢查询日志中
