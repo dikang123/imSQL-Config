@@ -1,11 +1,11 @@
-Name:       ParateraDB-Configuration
-Version:    1.0.17
+Name:       imSQL-Config
+Version:    1.0.19
 Release:	1%{?dist}
-Summary:	ParateraDB Configuration Files.
+Summary:	imSQL Configuration Files.
 
-Group:      Databases/ParateraDB	
+Group:      Databases/imSQL	
 License:    Copyright(c) 2015	
-URL:	    https://git.paratera.net/dba/ParateraDB-Utils	
+URL:	    https://git.paratera.net/dba/imSQL-Utils	
 Source0:    https://git.paratera.net/dba/%{name}.tar.gz	
 
 
@@ -13,7 +13,7 @@ BuildRequires: coreutils grep procps shadow-utils time
 
 Requires:       grep coreutils procps shadow-utils time 
 %description
-    ParateraDB Configuration Files.
+    imSQL Configuration Files.
 
 %prep
 %setup -q -n %{name}
