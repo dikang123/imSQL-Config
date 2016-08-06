@@ -35,6 +35,7 @@ log_output = FILE,TABLE
 default-time-zone='+08:00'
 
 #*********************Performance Table**************#
+#Performance默认开启的话会占用大量的内存空间。所以强制关闭此功能。
 performance_schema = OFF
 performance_schema_max_table_instances = 400
 
@@ -97,7 +98,7 @@ port=3306
 #绑定的端口
 socket=/var/lib/mysql/mysql.sock
 #Socket文件的存储位置
-max_allowed_packet = 4194304
+max_allowed_packet = 16777216
 #服务器端允许接受和发送的最大包大小
 net_buffer_length = 16384
 #服务器网络缓冲大小。net_buffer_length的值一定要小鱼max_allowed_packet的值。否则会报警。
@@ -189,7 +190,7 @@ log-slow-verbosity=query_plan,profiling,innodb
 #full: Equivalent to all other values OR’ed together without the profiling and profiling_use_getrusage options.
 #profiling: Enables profiling of all queries in all connections.
 #profiling_use_getrusage: Enables usage of the getrusage function.
-max_slowlog_files = 10
+max_slowlog_files = 100
 max_slowlog_size = 10M
 
 
@@ -207,7 +208,7 @@ innodb_print_all_deadlocks = OFF
 #*********************审计日志配置**********************#
 #audit_log_path = /Database/AuditLogs
 #audit_log_rotate_on_size = 10M 
-#audit_log_rotations = 10 
+#audit_log_rotations = 100
 #audit_log_format = MONGO
 #audit_log_logging = ON
 #audit_log_file = "audit.log"
