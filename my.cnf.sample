@@ -297,5 +297,5 @@ auto-rehash
 pager="less -i -n -S"
 tee="/Database/TmpData/query.log"
 #命令行输出的导出位置及名称
-prompt=(\\u@\\h) [\\d]>\\_
+prompt=\\u@\\h:\\p[\\d]\\_[\\r:\\m:\\s\\_\\P]>\\_
 #命令行提示符
