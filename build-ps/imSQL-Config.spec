@@ -1,5 +1,5 @@
 Name:       imSQL-Config
-Version:    1.0.19
+Version:    1.0.20
 Release:	1%{?dist}
 Summary:	imSQL Configuration Files.
 
