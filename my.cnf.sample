@@ -15,9 +15,9 @@ lower_case_table_names=1
 #忽略表名的大小写。
 group_concat_max_len = 2000000
 #group_concat函数输出的最长字符数
-transaction-isolation = REPEATABLE-READ
+transaction-isolation = READ-COMMITTED
 #隔离级别READ-UNCOMMITTED,READ-COMMITTED, REPEATABLE-READ, or SERIALIZABLE
-sql_mode = NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+sql_mode = STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER
 #sql约束模式
 # 参考： 
 #        STRICT_ALL_TABLES   对所有存储引擎使用严格模式
@@ -33,11 +33,47 @@ symbolic-links=0
 log_output = FILE,TABLE
 #设定general_log和slowquery都保存在什么位置。默认是FILE,表示都保存到文件。如果是TABLE表示保存到mysql.general_log和mysql.slow_query_log表中。
 default-time-zone='+08:00'
+#开启自动提交
+autocommit = ON
+#timestmap数据类型如果没有声明not null，是允许null值得。可以直接设置改为null，而没有默认填充行为。
+explicit_defaults_for_timestamp = ON
+#启动服务后加载的插件
+plugin_load = "audit_log.so;validate_password.so;rpl_semi_sync_master=semisync_master.so;rpl_semi_sync_slave=semisync_slave.so"
 
 #*********************Performance Table**************#
 #Performance默认开启的话会占用大量的内存空间。所以强制关闭此功能。
-performance_schema = OFF
+performance_schema = ON
+performance_schema_accounts_size = 100
+performance_schema_digests_size = 10000
+performance_schema_events_stages_history_long_size = 10000
+performance_schema_events_stages_history_size = 10
+performance_schema_events_statements_history_long_size = 10000
+performance_schema_events_statements_history_size = 10
+performance_schema_events_waits_history_long_size = 10000
+performance_schema_events_waits_history_size = 10
+performance_schema_hosts_size = 100
+performance_schema_max_cond_classes = 80
+performance_schema_max_cond_instances = 6900
+performance_schema_max_digest_length = 1024
+performance_schema_max_file_classes = 50
+performance_schema_max_file_handles = 32768
+performance_schema_max_file_instances = 7710
+performance_schema_max_mutex_classes = 200
+performance_schema_max_mutex_instances = 23000
+performance_schema_max_rwlock_classes = 40
+performance_schema_max_rwlock_instances = 10800
+performance_schema_max_socket_classes = 10
+performance_schema_max_socket_instances = 2020
+performance_schema_max_stage_classes = 150
+performance_schema_max_statement_classes = 179
+performance_schema_max_table_handles = 4000
 performance_schema_max_table_instances = 400
+performance_schema_max_thread_classes = 50
+performance_schema_max_thread_instances = 2100
+performance_schema_session_connect_attrs_size = 512
+performance_schema_setup_actors_size = 100
+performance_schema_setup_objects_size = 100
+performance_schema_users_size = 100
 
 
 #*********************线程池配置*********************#
@@ -61,7 +97,19 @@ thread_handling = one-thread-per-connection
 
 
 
-#*********************InnoDB线程配置*********************#
+#*********************InnoDB存储引擎配置*********************#
+innodb_page_size = 16384
+innodb_lru_scan_depth = 4096
+innodb_lock_wait_timeout = 5
+innodb_undo_logs = 128
+innodb_undo_tablespaces = 3
+innodb_flush_neighbors = 0
+innodb_purge_threads = 4
+innodb_large_prefix = ON
+innodb_strict_mode = ON
+innodb_sort_buffer_size = 67108864
+innodb_stats_persistent_sample_pages = 64
+
 innodb_thread_concurrency=0
 #InnoDB并发线程数
 # 参考: 
@@ -92,6 +140,14 @@ innodb_io_capacity_max = 2000
 #*********************网络配置*********************#
 max_connections = 1000
 #允许的最大连接数
+interactive_timeout = 1800
+wait_timeout = 1800
+#等待连接超时
+lock_wait_timeout = 1800
+#锁等超时
+skip_name_resolve = ON
+#跳过主机名解析
+max_connect_errors = 1000000
 bind-address=0.0.0.0
 #绑定的地址
 port=3306
@@ -107,6 +163,8 @@ net_buffer_length = 16384
 #*********************缓冲池配置*********************#
 innodb_buffer_pool_size = 6G
 #InnoDB缓冲池大小
+innodb_buffer_pool_instances = 16
+#缓冲池实例大小
 innodb_change_buffer_max_size = 25
 #InnoDB Change Buffer占用缓冲池的比例
 innodb_change_buffering = all
@@ -146,6 +204,8 @@ innodb_file_format_max=Barracuda
 #*********************在线日志配置*********************#
 innodb_log_group_home_dir = /Database/OnLineLogs
 #在线日志的存储路径
+innodb_log_buffer_size = 16777216
+#在线日志缓冲区大小16MB
 innodb_log_files_in_group=8
 #同事有多少个日志组
 innodb_log_file_size=1G
@@ -171,6 +231,10 @@ gtid-mode=ON
 #开启GTID日志
 enforce-gtid-consistency=True
 #强制使用事务语句
+binlog-rows-query-log-events = ON
+#在归档日志中记录时间信息，不用再mysqlbinlog -vvv查看。
+log-bin-trust-function-creators = ON
+#允许到开启了归档日志的主机上创建用户自定义函数udf
 
 
 #*********************慢查询日志配置*********************#
@@ -192,6 +256,16 @@ log-slow-verbosity=query_plan,profiling,innodb
 #profiling_use_getrusage: Enables usage of the getrusage function.
 max_slowlog_files = 100
 max_slowlog_size = 10M
+#限定慢查询日志大小
+log_slow_admin_statements = 1
+log_slow_slave_statements = 1
+#管理语句和slave语句也记录到慢查询
+log_queries_not_using_indexes = 1
+#查询未使用索引的查询
+log_throttle_queries_not_using_indexes = 10
+#用来表示每分钟允许记录到slow log的且未使用索引的SQL语句次数
+min_examined_row_limit = 100
+#记录查找了多达100次而引起的慢查询 
 
 
 #*********************操作日志配置*********************#
@@ -202,37 +276,40 @@ general_log_file = /Database/TmpData/general.log
 
 #*********************死锁日志配置**********************#
 deadlock_log_path = /Database/TmpData
-innodb_print_all_deadlocks = OFF
+innodb_print_all_deadlocks = ON
 
 
 #*********************审计日志配置**********************#
-#audit_log_path = /Database/AuditLogs
-#audit_log_rotate_on_size = 10M 
-#audit_log_rotations = 100
-#audit_log_format = MONGO
-#audit_log_logging = ON
-#audit_log_file = "audit.log"
+audit_log_path = /Database/AuditLogs
+audit_log_rotate_on_size = 10M 
+audit_log_rotations = 100
+audit_log_format = MONGO
+audit_log_logging = ON
+audit_log_file = "audit.log"
 
 
 #*********************RELAY日志配置*********************#
-#relay_log=/var/lib/mysql/Relay-logs
+relay_log=/var/lib/mysql/Relay-logs
 #从机relay日志的保存位置及名称
-#master-info-repository=FILE
-#relay-log-info-repository=FILE
+master_info_repository= TABLE
+relay_log_info_repository= TABLE
 #relay日志信息及主节点信息保存方式
-#sync-master-info=1
+sync-master-info=1
 #同步保存主信息
-#binlog-checksum=CRC32
-#master-verify-checksum=1
+binlog-checksum=CRC32
+master-verify-checksum=1
 #report-host=semi-node1
+relay_log_recovery = ON
 
 
 #*********************同步配置*********************#
-#rpl_semi_sync_master_enabled=1
-#rpl_semi_sync_master_timeout=1000
-#rpl_semi_sync_slave_enabled=1
+rpl_semi_sync_master_enabled=1
+rpl_semi_sync_master_timeout=3000
+rpl_semi_sync_slave_enabled=1
 #binlog-do-db=testdb
 #binlog-ignore-db=basedb
+slave_skip_errors = ddl_exist_errors
+slave-rows-search-algorithms = 'INDEX_SCAN,HASH_SCAN'
 
 
 
@@ -271,6 +348,11 @@ read_rnd_buffer_size = 2M
 #*********************SSL安全连接配置*********************#
 #sha256_password_private_key_path='/var/lib/mysql/mykey.pem'
 #sha256_password_public_key_path='/var/lib/mysql/mykey.pub'
+#
+
+#**************密码增强******************* #
+validate_password_policy=STRONG
+validate-password=FORCE_PLUS_PERMANENT
 
 
 [mysqld_safe]
