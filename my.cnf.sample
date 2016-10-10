@@ -17,7 +17,7 @@ group_concat_max_len = 2000000
 #group_concat函数输出的最长字符数
 transaction-isolation = READ-COMMITTED
 #隔离级别READ-UNCOMMITTED,READ-COMMITTED, REPEATABLE-READ, or SERIALIZABLE
-sql_mode = STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER
+sql_mode = STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION,NO_AUTO_CREATE_USER
 #sql约束模式
 # 参考： 
 #        STRICT_ALL_TABLES   对所有存储引擎使用严格模式
@@ -101,8 +101,6 @@ thread_handling = one-thread-per-connection
 innodb_page_size = 16384
 innodb_lru_scan_depth = 4096
 innodb_lock_wait_timeout = 5
-innodb_undo_logs = 128
-innodb_undo_tablespaces = 3
 innodb_flush_neighbors = 0
 innodb_purge_threads = 4
 innodb_large_prefix = ON
@@ -213,6 +211,10 @@ innodb_log_file_size=1G
 innodb_flush_log_at_trx_commit=1
 #事务提交必须刷新日志
 
+#*********************undo日志配置*********************#
+innodb_undo_logs = 128
+innodb_undo_tablespaces = 8
+
 
 #*********************归档日志配置*********************#
 log_bin = /Database/ArchLogs/archlog
@@ -238,7 +240,7 @@ log-bin-trust-function-creators = ON
 
 
 #*********************慢查询日志配置*********************#
-slow_query_log=0
+slow_query_log = ON
 #慢查询日志开启开关
 slow_query_log_file = /Database/SlowLogs/slowquery
 #慢查询保存的位置及名称
@@ -326,7 +328,7 @@ slave-rows-search-algorithms = 'INDEX_SCAN,HASH_SCAN'
 
 
 #*********************事件调度配置*********************#
-event_scheduler=OFF
+event_scheduler=ON
 #事件调度器开关
 
 
